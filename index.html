@@ -418,12 +418,87 @@ button#send {
 button#send:hover { background: #d4b070; }
 button#send:disabled { background: var(--border2); color: var(--text-muted); cursor: not-allowed; }
 
-.input-hint {
-  text-align: center;
-  font-size: 0.62rem;
-  color: var(--text-muted);
-  margin-top: 0.4rem;
-  letter-spacing: 0.04em;
+/* API KEY MODAL */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-top: 2px solid var(--accent);
+  border-radius: 6px;
+  padding: 2rem;
+  width: 420px;
+  max-width: 90vw;
+}
+
+.modal-title {
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.modal-desc {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-bottom: 1.2rem;
+}
+
+.modal-desc a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.modal input {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: 4px;
+  outline: none;
+  margin-bottom: 0.8rem;
+  letter-spacing: 0.02em;
+}
+
+.modal input:focus { border-color: var(--accent); }
+
+.modal button {
+  width: 100%;
+  background: var(--accent);
+  color: #0a0a0a;
+  border: none;
+  font-family: var(--display);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 0.7rem;
+  border-radius: 4px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: background 0.15s;
+}
+
+.modal button:hover { background: #d4b070; }
+.modal-error {
+  font-size: 0.72rem;
+  color: var(--red);
+  margin-top: 0.5rem;
+  display: none;
 }
 </style>
 </head>
@@ -481,6 +556,21 @@ button#send:disabled { background: var(--border2); color: var(--text-muted); cur
 
 </div>
 
+<!-- MODAL API KEY -->
+<div class="modal-overlay" id="modal-apikey">
+  <div class="modal">
+    <div class="modal-title">I.G.O.R — Configuração</div>
+    <div class="modal-desc">
+      Para usar o I.G.O.R você precisa de uma chave de API da Anthropic.<br>
+      Obtenha a sua em <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys.<br><br>
+      A chave fica salva apenas no seu navegador e nunca é enviada para nenhum servidor externo.
+    </div>
+    <input type="password" id="apikey-input" placeholder="sk-ant-api03-..." />
+    <button onclick="salvarApiKey()">Confirmar e entrar</button>
+    <div class="modal-error" id="modal-error">Chave inválida. Verifique e tente novamente.</div>
+  </div>
+</div>
+
 <script>
 // ═══════════════════════════════════════
 // CONFIGURAÇÃO
@@ -488,14 +578,48 @@ button#send:disabled { background: var(--border2); color: var(--text-muted); cur
 const SUPABASE_URL = 'https://ejkuoefnavgvlobiokbq.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_zFAM6tL6msSUcSvHuXoVPA_j9Nne1Av';
 const CLAUDE_MODEL = 'claude-sonnet-4-20250514';
-const ANTHROPIC_KEY = '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';
+
+function getApiKey() {
+  return sessionStorage.getItem('igor_api_key') || '';
+}
+
+function setApiKey(key) {
+  sessionStorage.setItem('igor_api_key', key);
+}
 
 let history = [];
 let isLoading = false;
 const chartInstances = {};
 
 // ═══════════════════════════════════════
-// SUPABASE
+// API KEY MODAL
+// ═══════════════════════════════════════
+function checkApiKey() {
+  if (!getApiKey()) {
+    document.getElementById('modal-apikey').style.display = 'flex';
+  } else {
+    document.getElementById('modal-apikey').style.display = 'none';
+  }
+}
+
+function salvarApiKey() {
+  const key = document.getElementById('apikey-input').value.trim();
+  if (!key.startsWith('sk-ant-')) {
+    document.getElementById('modal-error').style.display = 'block';
+    return;
+  }
+  setApiKey(key);
+  document.getElementById('modal-apikey').style.display = 'none';
+}
+
+document.getElementById('apikey-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') salvarApiKey();
+});
+
+// Verifica ao carregar
+checkApiKey();
+
+// ═══════════════════════════════════════
 // ═══════════════════════════════════════
 async function query(tabela, params = '') {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${tabela}?${params}`, {
@@ -575,7 +699,7 @@ REGRAS:
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': ANTHROPIC_KEY,
+      'x-api-key': getApiKey(),
       'anthropic-version': '2023-06-01',
       'anthropic-dangerous-direct-browser-access': 'true'
     },
