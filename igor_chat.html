@@ -14,7 +14,6 @@
     --surface2: #1f1f1f;
     --border: #2a2a2a;
     --accent: #e8c547;
-    --accent2: #ff6b35;
     --green: #4ade80;
     --red: #f87171;
     --yellow: #fbbf24;
@@ -43,32 +42,18 @@
     gap: 1rem;
   }
 
-  header h1 {
-    font-family: var(--mono);
-    font-size: 1.4rem;
-    color: var(--accent);
-    letter-spacing: 0.05em;
-  }
-
-  header span {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    color: var(--muted);
-  }
+  header h1 { font-family: var(--mono); font-size: 1.4rem; color: var(--accent); letter-spacing: 0.05em; }
+  header span { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); }
 
   .config-bar {
     display: flex;
     gap: 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     flex-wrap: wrap;
     align-items: flex-end;
   }
 
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-  }
+  .field { display: flex; flex-direction: column; gap: 0.4rem; }
 
   .field label {
     font-family: var(--mono);
@@ -91,10 +76,182 @@
     transition: border-color 0.2s;
   }
 
-  select:focus, input[type="month"]:focus {
-    border-color: var(--accent);
+  select:focus, input[type="month"]:focus { border-color: var(--accent); }
+  select.nao-confirmada { border-color: var(--yellow); box-shadow: 0 0 0 2px rgba(251,191,36,0.15); }
+  select.confirmada { border-color: var(--green); box-shadow: 0 0 0 2px rgba(74,222,128,0.1); }
+
+  .confirmar-loja-wrap { display: flex; flex-direction: column; justify-content: flex-end; }
+
+  #confirmar-loja-btn {
+    background: transparent;
+    border: 1px solid var(--yellow);
+    color: var(--yellow);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.15s;
+    height: 38px;
   }
 
+  #confirmar-loja-btn:hover { background: rgba(251,191,36,0.1); }
+  #confirmar-loja-btn.confirmado { border-color: var(--green); color: var(--green); }
+
+  .loja-badge { font-family: var(--mono); font-size: 0.7rem; margin-top: 0.3rem; min-height: 1.2em; color: var(--muted); }
+  .loja-badge.ok { color: var(--green); }
+  .loja-badge.warn { color: var(--yellow); }
+
+  /* ── OPÇÃO LIMPAR ── */
+  .limpar-opcao {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .limpar-opcao-left {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    flex: 1;
+    min-width: 260px;
+  }
+
+  .toggle-wrap { position: relative; width: 38px; height: 22px; flex-shrink: 0; }
+
+  .toggle-wrap input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+  }
+
+  .toggle-track {
+    position: absolute;
+    inset: 0;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .toggle-track::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: var(--muted);
+    border-radius: 50%;
+    top: 3px;
+    left: 3px;
+    transition: all 0.2s;
+  }
+
+  .toggle-wrap input:checked + .toggle-track {
+    background: rgba(249,113,113,0.15);
+    border-color: var(--red);
+  }
+
+  .toggle-wrap input:checked + .toggle-track::after {
+    background: var(--red);
+    transform: translateX(16px);
+  }
+
+  .limpar-texto { flex: 1; }
+
+  .limpar-titulo {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+  }
+
+  .limpar-desc {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* Seleção de quais tabelas limpar */
+  .limpar-tabelas {
+    display: none;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--border);
+    margin-top: 0.8rem;
+    width: 100%;
+  }
+
+  .limpar-tabelas.show { display: flex; }
+
+  .limpar-tabelas-label {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    width: 100%;
+    margin-bottom: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.35rem 0.7rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    user-select: none;
+  }
+
+  .check-item:hover { border-color: var(--red); color: var(--text); }
+
+  .check-item input[type="checkbox"] {
+    accent-color: var(--red);
+    width: 12px;
+    height: 12px;
+    cursor: pointer;
+    opacity: 1;
+    position: static;
+  }
+
+  .check-item.checked {
+    border-color: var(--red);
+    color: var(--red);
+    background: rgba(249,113,113,0.06);
+  }
+
+  .limpar-aviso {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--red);
+    width: 100%;
+    margin-top: 0.4rem;
+    display: none;
+  }
+
+  .limpar-aviso.show { display: block; }
+
+  /* ── GRID DE CARDS ── */
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -114,13 +271,9 @@
   .card.has-file { border-color: var(--accent); }
   .card.success { border-color: var(--green); }
   .card.error { border-color: var(--red); }
+  .card.warning { border-color: var(--yellow); }
 
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 0.8rem;
-  }
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.8rem; }
 
   .card-title {
     font-family: var(--mono);
@@ -140,20 +293,8 @@
     color: var(--muted);
   }
 
-  .card-desc {
-    font-size: 0.78rem;
-    color: var(--muted);
-    margin-bottom: 0.8rem;
-    line-height: 1.5;
-  }
-
-  .card-table {
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    color: #555;
-    margin-bottom: 1rem;
-    line-height: 1.8;
-  }
+  .card-desc { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.8rem; line-height: 1.5; }
+  .card-table { font-family: var(--mono); font-size: 0.65rem; color: #555; margin-bottom: 1rem; line-height: 1.8; }
 
   .file-drop {
     border: 1px dashed var(--border);
@@ -167,37 +308,14 @@
 
   .file-drop:hover { border-color: var(--accent); background: rgba(232,197,71,0.03); }
   .file-drop.dragover { border-color: var(--accent); background: rgba(232,197,71,0.06); }
-
   .file-drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
+  .file-drop-text { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); pointer-events: none; }
 
-  .file-drop-text {
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    color: var(--muted);
-    pointer-events: none;
-  }
+  .file-name { font-family: var(--mono); font-size: 0.72rem; color: var(--accent); margin-top: 0.5rem; word-break: break-all; }
+  .card-status { font-family: var(--mono); font-size: 0.7rem; margin-top: 0.6rem; min-height: 1.2em; }
+  .mes-alerta { font-family: var(--mono); font-size: 0.68rem; color: var(--yellow); margin-top: 0.4rem; display: none; line-height: 1.5; }
 
-  .file-name {
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    color: var(--accent);
-    margin-top: 0.5rem;
-    word-break: break-all;
-  }
-
-  .card-status {
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    margin-top: 0.6rem;
-    min-height: 1.2em;
-  }
-
-  .actions {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    align-items: center;
-  }
+  .actions { display: flex; gap: 1rem; margin-bottom: 2rem; align-items: center; flex-wrap: wrap; }
 
   button {
     font-family: var(--mono);
@@ -212,28 +330,29 @@
     text-transform: uppercase;
   }
 
-  #import-btn {
-    background: var(--accent);
-    color: #000;
-  }
-
+  #import-btn { background: var(--accent); color: #000; }
   #import-btn:hover { background: #f0d060; }
   #import-btn:disabled { background: #444; color: #666; cursor: not-allowed; }
 
-  #clear-btn {
-    background: transparent;
-    color: var(--muted);
-    border: 1px solid var(--border);
-  }
-
+  #clear-btn { background: transparent; color: var(--muted); border: 1px solid var(--border); }
   #clear-btn:hover { border-color: var(--muted); color: var(--text); }
 
-  .log-container {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 1rem;
+  .aviso-banner {
+    display: none;
+    background: rgba(251,191,36,0.08);
+    border: 1px solid var(--yellow);
+    border-radius: 4px;
+    padding: 0.7rem 1rem;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--yellow);
+    margin-bottom: 1rem;
+    line-height: 1.6;
   }
+
+  .aviso-banner.show { display: block; }
+
+  .log-container { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; }
 
   .log-header {
     font-family: var(--mono);
@@ -246,14 +365,7 @@
     justify-content: space-between;
   }
 
-  #log {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    line-height: 1.8;
-    max-height: 400px;
-    overflow-y: auto;
-  }
-
+  #log { font-family: var(--mono); font-size: 0.75rem; line-height: 1.8; max-height: 400px; overflow-y: auto; }
   .log-line { padding: 0.15rem 0; }
   .log-ok { color: var(--green); }
   .log-warn { color: var(--yellow); }
@@ -261,20 +373,8 @@
   .log-info { color: var(--muted); }
   .log-ts { color: #444; margin-right: 0.5rem; }
 
-  .progress-bar {
-    height: 2px;
-    background: var(--border);
-    border-radius: 1px;
-    margin-bottom: 1rem;
-    overflow: hidden;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: var(--accent);
-    transition: width 0.3s;
-    width: 0%;
-  }
+  .progress-bar { height: 2px; background: var(--border); border-radius: 1px; margin-bottom: 1rem; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); transition: width 0.3s; width: 0%; }
 </style>
 </head>
 <body>
@@ -286,18 +386,57 @@
 
 <div class="config-bar">
   <div class="field">
-    <label>Loja</label>
-    <select id="loja">
+    <label>Loja *</label>
+    <select id="loja" class="nao-confirmada" onchange="onLojaChange()">
+      <option value="">— selecione a loja —</option>
       <option value="1">01 — Lima e Silva</option>
       <option value="2">02 — Bom Fim</option>
       <option value="3">03 — Canoas</option>
     </select>
+    <div class="loja-badge warn" id="loja-badge">⚠ Confirme a loja antes de importar</div>
+  </div>
+  <div class="confirmar-loja-wrap">
+    <button id="confirmar-loja-btn" onclick="confirmarLoja()">Confirmar loja</button>
   </div>
   <div class="field">
-    <label>Mês de referência</label>
-    <input type="month" id="mes" value="2026-04">
+    <label>Mês de referência *</label>
+    <input type="month" id="mes" value="2026-04" onchange="onMesChange()">
   </div>
 </div>
+
+<!-- OPÇÃO LIMPAR ANTES DE IMPORTAR -->
+<div class="limpar-opcao">
+  <div class="limpar-opcao-left">
+    <label class="toggle-wrap">
+      <input type="checkbox" id="toggle-limpar" onchange="onToggleLimpar()">
+      <span class="toggle-track"></span>
+    </label>
+    <div class="limpar-texto">
+      <div class="limpar-titulo">Limpar dados anteriores antes de importar</div>
+      <div class="limpar-desc">Apaga os registros existentes da loja + mês selecionados antes de gravar os novos. Use ao reimportar um relatório corrigido onde linhas foram removidas.</div>
+    </div>
+  </div>
+  <div class="limpar-tabelas" id="limpar-tabelas">
+    <div class="limpar-tabelas-label">Quais tabelas limpar:</div>
+    <label class="check-item" id="ci-rel1" onclick="toggleCheck('rel1')">
+      <input type="checkbox" id="limpar-rel1"> REL1 — vendas_produtos
+    </label>
+    <label class="check-item" id="ci-rel4" onclick="toggleCheck('rel4')">
+      <input type="checkbox" id="limpar-rel4"> REL4 — resumo_movimento
+    </label>
+    <label class="check-item" id="ci-dre" onclick="toggleCheck('dre')">
+      <input type="checkbox" id="limpar-dre"> DRE — dre
+    </label>
+    <label class="check-item" id="ci-rel90" onclick="toggleCheck('rel90')">
+      <input type="checkbox" id="limpar-rel90"> REL90 — itens_cupom
+    </label>
+    <div class="limpar-aviso" id="limpar-aviso">
+      ⚠ Atenção: os dados apagados não podem ser recuperados. Os novos dados serão importados logo em seguida.
+    </div>
+  </div>
+</div>
+
+<div class="aviso-banner" id="aviso-banner"></div>
 
 <div class="grid">
 
@@ -362,6 +501,7 @@
       <div class="file-drop-text">↑ soltar ou clicar para selecionar</div>
     </div>
     <div class="file-name" id="fname-rel90"></div>
+    <div class="mes-alerta" id="mes-alerta-rel90"></div>
     <div class="card-status" id="status-rel90"></div>
   </div>
 
@@ -383,14 +523,156 @@
 </div>
 
 <script>
-// ═══════════════════════════════════════════════
-// CONFIGURAÇÃO SUPABASE
-// ═══════════════════════════════════════════════
 const SUPABASE_URL = 'https://ejkuoefnavgvlobiokbq.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_zFAM6tL6msSUcSvHuXoVPA_j9Nne1Av';
+const LOJAS = { '1': 'Lima e Silva', '2': 'Bom Fim', '3': 'Canoas' };
+const TABELAS = { rel1: 'vendas_produtos', rel4: 'resumo_movimento', dre: 'dre', rel90: 'itens_cupom' };
 
 const files = { rel1: null, rel4: null, dre: null, rel90: null };
 let logCount = 0;
+let lojaConfirmada = false;
+
+// ═══════════════════════════════════════════════
+// TOGGLE LIMPAR
+// ═══════════════════════════════════════════════
+function onToggleLimpar() {
+  const ativo = document.getElementById('toggle-limpar').checked;
+  const tabelas = document.getElementById('limpar-tabelas');
+  const aviso = document.getElementById('limpar-aviso');
+  tabelas.classList.toggle('show', ativo);
+  aviso.classList.toggle('show', ativo);
+}
+
+function toggleCheck(tipo) {
+  const cb = document.getElementById(`limpar-${tipo}`);
+  const ci = document.getElementById(`ci-${tipo}`);
+  // O click já vai inverter o checkbox nativamente — só sincroniza a classe visual
+  setTimeout(() => {
+    ci.classList.toggle('checked', cb.checked);
+  }, 0);
+}
+
+function getTabelasParaLimpar() {
+  if (!document.getElementById('toggle-limpar').checked) return [];
+  return ['rel1','rel4','dre','rel90'].filter(t => document.getElementById(`limpar-${t}`).checked);
+}
+
+// ═══════════════════════════════════════════════
+// LIMPAR NO SUPABASE
+// ═══════════════════════════════════════════════
+async function limparTabelaMes(tabela, codigoLoja, mesRef) {
+  const mesCompleto = mesRef + '-01';
+  const url = `${SUPABASE_URL}/rest/v1/${tabela}?codigo_loja=eq.${codigoLoja}&mes_referencia=eq.${mesCompleto}`;
+  const res = await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Erro ao limpar ${tabela}: ${res.status} ${err.slice(0,200)}`);
+  }
+}
+
+// ═══════════════════════════════════════════════
+// VALIDAÇÃO DE LOJA
+// ═══════════════════════════════════════════════
+function onLojaChange() {
+  lojaConfirmada = false;
+  const sel = document.getElementById('loja');
+  const btn = document.getElementById('confirmar-loja-btn');
+  const badge = document.getElementById('loja-badge');
+  sel.className = 'nao-confirmada';
+  btn.className = '';
+  btn.textContent = 'Confirmar loja';
+  badge.className = 'loja-badge warn';
+  badge.textContent = '⚠ Confirme a loja antes de importar';
+  atualizarAviso();
+}
+
+function confirmarLoja() {
+  const sel = document.getElementById('loja');
+  if (!sel.value) { mostrarAviso('⚠ Selecione uma loja antes de confirmar.'); return; }
+  lojaConfirmada = true;
+  sel.className = 'confirmada';
+  const btn = document.getElementById('confirmar-loja-btn');
+  btn.className = 'confirmado';
+  btn.textContent = '✓ Confirmada';
+  const badge = document.getElementById('loja-badge');
+  badge.className = 'loja-badge ok';
+  badge.textContent = `✓ Loja ${sel.value} — ${LOJAS[sel.value]}`;
+  atualizarAviso();
+}
+
+function onMesChange() {
+  if (files.rel90) verificarMesREL90(files.rel90);
+}
+
+// ═══════════════════════════════════════════════
+// VALIDAÇÃO DE MÊS DO REL90
+// ═══════════════════════════════════════════════
+async function verificarMesREL90(file) {
+  const mesRef = document.getElementById('mes').value;
+  const alertaEl = document.getElementById('mes-alerta-rel90');
+  try {
+    const buffer = await file.arrayBuffer();
+    const wb = XLSX.read(buffer, { type: 'array' });
+    const sheet = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+    const mesesEncontrados = new Set();
+    for (let i = 1; i < Math.min(rows.length, 50); i++) {
+      const col0 = String(rows[i][0] || '').trim();
+      if (!col0 || col0 === 'nan') continue;
+      let dataCaixa = col0;
+      const serial = parseInt(col0);
+      if (!isNaN(serial) && serial > 40000 && col0 === String(serial)) {
+        const d = new Date(Date.UTC(1899, 11, 30) + serial * 86400000);
+        dataCaixa = d.toISOString().split('T')[0];
+      } else if (col0.includes(' ')) {
+        dataCaixa = col0.split(' ')[0];
+      }
+      const match = dataCaixa.match(/^(\d{4}-\d{2})/);
+      if (match) mesesEncontrados.add(match[1]);
+      if (mesesEncontrados.size >= 3) break;
+    }
+    if (mesesEncontrados.size === 0) { alertaEl.style.display = 'none'; return; }
+    const mesesArr = Array.from(mesesEncontrados);
+    const todosBatem = mesesArr.every(m => m === mesRef);
+    if (!todosBatem) {
+      alertaEl.style.display = 'block';
+      alertaEl.textContent = `⚠ Arquivo contém dados de ${mesesArr.join(', ')} mas o mês selecionado é ${mesRef}. Verifique antes de importar.`;
+      document.getElementById('card-rel90').classList.add('warning');
+    } else {
+      alertaEl.style.display = 'none';
+      document.getElementById('card-rel90').classList.remove('warning');
+    }
+  } catch(e) { alertaEl.style.display = 'none'; }
+}
+
+// ═══════════════════════════════════════════════
+// BANNER
+// ═══════════════════════════════════════════════
+function mostrarAviso(msg) {
+  const el = document.getElementById('aviso-banner');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 4000);
+}
+
+function atualizarAviso() {
+  const el = document.getElementById('aviso-banner');
+  if (!lojaConfirmada) {
+    el.textContent = '⚠ Confirme a loja selecionada antes de importar. Isso garante que os dados vão para a loja correta no Supabase.';
+    el.classList.add('show');
+  } else {
+    el.classList.remove('show');
+  }
+}
+
+atualizarAviso();
 
 // ═══════════════════════════════════════════════
 // LOG
@@ -413,7 +695,7 @@ function setProgress(pct) {
 }
 
 // ═══════════════════════════════════════════════
-// SELEÇÃO DE ARQUIVO
+// ARQUIVO
 // ═══════════════════════════════════════════════
 function onFile(tipo, input) {
   const file = input.files[0];
@@ -423,15 +705,15 @@ function onFile(tipo, input) {
   document.getElementById(`card-${tipo}`).classList.add('has-file');
   document.getElementById(`status-${tipo}`).textContent = '';
   log(`Arquivo selecionado [${tipo.toUpperCase()}]: ${file.name}`, 'info');
+  if (tipo === 'rel90') verificarMesREL90(file);
 }
 
 function limpar() {
   Object.keys(files).forEach(k => files[k] = null);
   document.querySelectorAll('.file-name').forEach(el => el.textContent = '');
   document.querySelectorAll('.card-status').forEach(el => el.textContent = '');
-  document.querySelectorAll('.card').forEach(el => {
-    el.classList.remove('has-file', 'success', 'error');
-  });
+  document.querySelectorAll('.mes-alerta').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.card').forEach(el => el.classList.remove('has-file','success','error','warning'));
   document.getElementById('log').innerHTML = '';
   logCount = 0;
   document.getElementById('log-count').textContent = '0 eventos';
@@ -447,24 +729,15 @@ async function upsert(tabela, registros, onConflict) {
     'apikey': SUPABASE_KEY,
     'Authorization': `Bearer ${SUPABASE_KEY}`,
     'Content-Type': 'application/json',
-    'Prefer': `resolution=merge-duplicates`
+    'Prefer': `resolution=merge-duplicates,return=minimal`
   };
-  if (onConflict) headers['Prefer'] += `,return=minimal`;
-
   const BATCH = 500;
   let total = 0;
   for (let i = 0; i < registros.length; i += BATCH) {
     const batch = registros.slice(i, i + BATCH);
     const params = onConflict ? `?on_conflict=${onConflict}` : '';
-    const res = await fetch(url + params, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(batch)
-    });
-    if (!res.ok) {
-      const err = await res.text();
-      throw new Error(`${res.status}: ${err.slice(0, 200)}`);
-    }
+    const res = await fetch(url + params, { method: 'POST', headers, body: JSON.stringify(batch) });
+    if (!res.ok) { const err = await res.text(); throw new Error(`${res.status}: ${err.slice(0,200)}`); }
     total += batch.length;
   }
   return total;
@@ -473,211 +746,104 @@ async function upsert(tabela, registros, onConflict) {
 // ═══════════════════════════════════════════════
 // PARSERS
 // ═══════════════════════════════════════════════
-
-// REL1 — header na linha 1 (índice 1), dados de L2 em diante
-// Colunas: Loja, Grupo, Subgrupo, Codigo, Produto, Quantidade, Un, Valor
 function parsearREL1(wb, codigoLoja, mesRef) {
   const sheet = wb.Sheets[wb.SheetNames[0]];
   const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
-
-  // Agrega por código (pode haver duplicatas no mesmo arquivo)
   const mapa = {};
-
   for (let i = 2; i < rows.length; i++) {
     const row = rows[i];
-    const loja  = String(row[0] ?? '').trim();
-    const grupo = String(row[1] ?? '').trim();
-    const sub   = String(row[2] ?? '').trim();
-    const cod   = String(row[3] ?? '').trim();
-    const nome  = String(row[4] ?? '').trim();
-    const qtde  = parseFloat(String(row[5] || 0).replace(/\./g, '').replace(',', '.')) || 0;
-    const uni   = String(row[6] ?? '').trim();
-    const valor = parseFloat(String(row[7] || 0).replace(/\./g, '').replace(',', '.')) || 0;
-
-    // Ignora linha de total (cod ou nome vazio/nan)
-    if (!cod || cod === 'nan' || cod === 'undefined') continue;
-    if (!nome || nome === 'nan' || nome === 'undefined') continue;
-
+    const cod  = String(row[3] ?? '').trim();
+    const nome = String(row[4] ?? '').trim();
+    if (!cod || cod === 'nan') continue;
+    if (!nome || nome === 'nan') continue;
+    const qtde  = parseFloat(String(row[5]||0).replace(/\./g,'').replace(',','.')) || 0;
+    const valor = parseFloat(String(row[7]||0).replace(/\./g,'').replace(',','.')) || 0;
     const key = `${codigoLoja}_${mesRef}_${cod}`;
-    if (mapa[key]) {
-      mapa[key].quantidade += qtde;
-      mapa[key].valor += valor;
-    } else {
-      mapa[key] = {
-        codigo_loja: parseInt(codigoLoja),
-        mes_referencia: mesRef + '-01',
-        loja: loja,
-        grupo: grupo,
-        subgrupo: sub,
-        codigo_produto: cod,
-        nome_produto: nome,
-        quantidade: qtde,
-        unidade: uni,
-        valor: valor,
-        chave: key
-      };
-    }
+    if (mapa[key]) { mapa[key].quantidade += qtde; mapa[key].valor += valor; }
+    else mapa[key] = {
+      codigo_loja: parseInt(codigoLoja), mes_referencia: mesRef+'-01',
+      loja: String(row[0]??'').trim(), grupo: String(row[1]??'').trim(),
+      subgrupo: String(row[2]??'').trim(), codigo_produto: cod, nome_produto: nome,
+      quantidade: qtde, unidade: String(row[6]??'').trim(), valor, chave: key
+    };
   }
-
   return Object.values(mapa).filter(r => r.nome_produto && r.nome_produto !== 'nan');
 }
 
-// REL4 — estrutura por "Tipo: X.Descrição", dados na col[1] e valor na col[5]
-// Ignora linhas de total (col[1] vazio ou começa com R$)
 function parsearREL4(wb, codigoLoja, mesRef) {
   const sheet = wb.Sheets[wb.SheetNames[0]];
   const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
-
   const dados = [];
   let tipoAtual = '';
-
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i];
-    const col0 = String(row[0] || '').trim();
-    const col1 = String(row[1] || '').trim();
-    const col5 = String(row[5] || '').trim();
-
-    // Detecta linha de tipo: "Tipo: 3.Faturamento "
-    if (col0.startsWith('Tipo:')) {
-      tipoAtual = col0.replace('Tipo:', '').trim();
-      continue;
-    }
-
-    if (!tipoAtual) continue;
-
-    // Ignora linhas de total (col1 vazio, começa com R$, ou é totalizador)
-    if (!col1 || col1 === 'nan') continue;
-    if (col1.startsWith('R$') || col5.startsWith('R$') && !col1) continue;
-
-    // Ignora linhas de subtotal (col0 tem valor mas col1 vazio já filtrado)
-    const valor = parseFloat(col5.replace('R$', '').replace('.', '').replace(',', '.').trim());
+    const col0 = String(row[0]||'').trim();
+    const col1 = String(row[1]||'').trim();
+    const col5 = String(row[5]||'').trim();
+    if (col0.startsWith('Tipo:')) { tipoAtual = col0.replace('Tipo:','').trim(); continue; }
+    if (!tipoAtual || !col1 || col1 === 'nan') continue;
+    if (col1.startsWith('R$')) continue;
+    const valor = parseFloat(col5.replace('R$','').replace('.','').replace(',','.').trim());
     if (isNaN(valor)) continue;
-
-    dados.push({
-      codigo_loja: parseInt(codigoLoja),
-      mes_referencia: mesRef + '-01',
-      tipo: tipoAtual,
-      descricao: col1,
-      valor: valor,
-      chave: `${codigoLoja}_${mesRef}_${tipoAtual}_${col1}`
-    });
+    dados.push({ codigo_loja: parseInt(codigoLoja), mes_referencia: mesRef+'-01', tipo: tipoAtual, descricao: col1, valor, chave: `${codigoLoja}_${mesRef}_${tipoAtual}_${col1}` });
   }
-
   return dados;
 }
 
-// DRE — grupos em col[0] "Grupo DRE: XXX - NOME", itens em col[2] e valor numérico em col[3]
-// Ignora linhas de total (col[2] vazio, começa com R$ ou nan, ou col[3] é string R$)
 function parsearDRE(wb, codigoLoja, mesRef) {
   const sheet = wb.Sheets[wb.SheetNames[0]];
   const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
-
   const dados = [];
-  let grupoAtual = '';
-  let grupoNome = '';
-
+  let grupoAtual = '', grupoNome = '';
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i];
-    const col0 = String(row[0] || '').trim();
-    const col2 = String(row[2] || '').trim();
-    const col3 = String(row[3] || '').trim();
-
-    // Detecta linha de grupo: "Grupo DRE: 005 - 02 DESPESAS ADMINISTRATIVAS "
+    const col0 = String(row[0]||'').trim();
+    const col2 = String(row[2]||'').trim();
+    const col3 = String(row[3]||'').trim();
     if (col0.startsWith('Grupo DRE:')) {
       const match = col0.match(/Grupo DRE:\s*(\d+)\s*-\s*(.+)/);
-      if (match) {
-        grupoAtual = match[1].trim();
-        grupoNome  = match[2].trim();
-      }
+      if (match) { grupoAtual = match[1].trim(); grupoNome = match[2].trim(); }
       continue;
     }
-
-    if (!grupoAtual) continue;
-
-    // Ignora: col2 vazio, nan, linhas de subtotal (começa com R$), cabeçalho
-    if (!col2 || col2 === 'nan' || col2 === 'Descrição' || col2 === 'Valor') continue;
-    if (col2.startsWith('R$')) continue;
-    // Ignora linhas de total que têm col3 = "R$ X.XXX,XX"
-    if (col3.startsWith('R$') || col3.startsWith('-R$')) continue;
-
-    const valor = parseFloat(col3.replace(',', '.'));
+    if (!grupoAtual || !col2 || col2 === 'nan' || col2 === 'Descrição' || col2 === 'Valor') continue;
+    if (col2.startsWith('R$') || col3.startsWith('R$') || col3.startsWith('-R$')) continue;
+    const valor = parseFloat(col3.replace(',','.'));
     if (isNaN(valor)) continue;
-
-    dados.push({
-      codigo_loja: parseInt(codigoLoja),
-      mes_referencia: mesRef + '-01',
-      grupo_dre: grupoNome,
-      descricao: col2,
-      valor: valor,
-      chave: `${codigoLoja}_${mesRef}_${grupoAtual}_${col2}`
-    });
+    dados.push({ codigo_loja: parseInt(codigoLoja), mes_referencia: mesRef+'-01', grupo_dre: grupoNome, descricao: col2, valor, chave: `${codigoLoja}_${mesRef}_${grupoAtual}_${col2}` });
   }
-
   return dados;
 }
 
-// REL90 — header na linha 0 (índice 0), dados de L1 em diante
-// Colunas: Data Caixa(0), Nº Cupom(1), Código Produto(2), Nome Produto(3),
-//          Qtde(4), Valor Bruto(5), [vazio](6), Desconto(7),
-//          Grupo(8), Motivo(9), Valor Liquido(10), Subgrupo(11), Tipo Pagamento(12)
 function parsearREL90(wb, codigoLoja, mesRef) {
   const sheet = wb.Sheets[wb.SheetNames[0]];
   const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
-
   const dados = [];
-
   for (let i = 1; i < rows.length; i++) {
     const row = rows[i];
-    const col0 = String(row[0] || '').trim(); // Data
-
-    // Ignora linha de total final (col0 vazio ou nan)
-    if (!col0 || col0 === 'nan' || col0 === '') continue;
-
-    const cupom       = String(row[1]  || '').trim();
-    const codProduto  = String(row[2]  || '').trim();
-    const nomeProduto = String(row[3]  || '').trim();
-    const qtde        = parseFloat(String(row[4]  || 0).replace(',', '.')) || 0;
-    const valorBruto  = parseFloat(String(row[5]  || 0).replace(',', '.')) || 0;
-    const desconto    = parseFloat(String(row[7]  || 0).replace(',', '.')) || 0;
-    const grupo       = String(row[8]  || '').trim();
-    const motivo      = String(row[9]  || '').trim();
-    const valorLiq    = parseFloat(String(row[10] || 0).replace(',', '.')) || 0;
-    const subgrupo    = String(row[11] || '').trim();
-    const tipoPag     = String(row[12] || '').trim();
-
-    // Ignora se não tem produto ou cupom
+    const col0 = String(row[0]||'').trim();
+    if (!col0 || col0 === 'nan') continue;
+    const cupom = String(row[1]||'').trim();
+    const nomeProduto = String(row[3]||'').trim();
     if (!nomeProduto || nomeProduto === 'nan' || !cupom || cupom === 'nan') continue;
-
-    // Parseia data: pode vir como "2026-04-01 00:00:00", "2026-04-01" ou serial Excel
     let dataCaixa = col0;
     const serial = parseInt(col0);
     if (!isNaN(serial) && serial > 40000 && col0 === String(serial)) {
-      // Serial Excel → data
-      const d = new Date(Date.UTC(1899, 11, 30) + serial * 86400000);
+      const d = new Date(Date.UTC(1899,11,30) + serial*86400000);
       dataCaixa = d.toISOString().split('T')[0];
-    } else if (col0.includes(' ')) {
-      dataCaixa = col0.split(' ')[0];
-    }
-
+    } else if (col0.includes(' ')) { dataCaixa = col0.split(' ')[0]; }
     dados.push({
-      codigo_loja: parseInt(codigoLoja),
-      mes_referencia: mesRef + '-01',
-      data_caixa: dataCaixa,
-      numero_cupom: parseInt(cupom) || 0,
-      codigo_produto: parseInt(codProduto) || 0,
-      nome_produto: nomeProduto,
-      quantidade: qtde,
-      valor_bruto: valorBruto,
-      desconto: desconto,
-      grupo: grupo,
-      motivo: motivo || null,
-      valor_liquido: valorLiq,
-      subgrupo: subgrupo,
-      tipo_pagamento: tipoPag || null,
-      chave: `${codigoLoja}_${dataCaixa}_${cupom}_${codProduto}`
+      codigo_loja: parseInt(codigoLoja), mes_referencia: mesRef+'-01',
+      data_caixa: dataCaixa, numero_cupom: parseInt(cupom)||0,
+      codigo_produto: parseInt(String(row[2]||''))||0, nome_produto: nomeProduto,
+      quantidade: parseFloat(String(row[4]||0).replace(',','.'))||0,
+      valor_bruto: parseFloat(String(row[5]||0).replace(',','.'))||0,
+      desconto: parseFloat(String(row[7]||0).replace(',','.'))||0,
+      grupo: String(row[8]||'').trim(), motivo: String(row[9]||'').trim()||null,
+      valor_liquido: parseFloat(String(row[10]||0).replace(',','.'))||0,
+      subgrupo: String(row[11]||'').trim(), tipo_pagamento: String(row[12]||'').trim()||null,
+      chave: `${codigoLoja}_${dataCaixa}_${cupom}_${String(row[2]||'').trim()}`
     });
   }
-
   return dados;
 }
 
@@ -685,24 +851,59 @@ function parsearREL90(wb, codigoLoja, mesRef) {
 // IMPORTAÇÃO PRINCIPAL
 // ═══════════════════════════════════════════════
 async function importarTudo() {
-  const codigoLoja = document.getElementById('loja').value;
-  const mesRef     = document.getElementById('mes').value;
-  const btn        = document.getElementById('import-btn');
-
-  const arquivos = Object.entries(files).filter(([k, v]) => v !== null);
-  if (arquivos.length === 0) {
-    log('Nenhum arquivo selecionado.', 'warn');
+  if (!lojaConfirmada) {
+    mostrarAviso('⚠ Confirme a loja selecionada antes de importar!');
+    document.getElementById('loja').focus();
     return;
   }
 
+  const codigoLoja = document.getElementById('loja').value;
+  const mesRef     = document.getElementById('mes').value;
+
+  if (!codigoLoja) { mostrarAviso('⚠ Selecione uma loja antes de importar.'); return; }
+
+  const arquivos = Object.entries(files).filter(([k,v]) => v !== null);
+  if (arquivos.length === 0) { log('Nenhum arquivo selecionado.', 'warn'); return; }
+
+  // Aviso mês divergente REL90
+  const alertaRel90 = document.getElementById('mes-alerta-rel90');
+  if (files.rel90 && alertaRel90.style.display === 'block') {
+    const ok = confirm(`⚠ ATENÇÃO\n\nO arquivo REL90 parece conter dados de um mês diferente de ${mesRef}.\n\nDeseja importar mesmo assim?`);
+    if (!ok) return;
+  }
+
+  // Confirma limpeza se ativada
+  const tabelasParaLimpar = getTabelasParaLimpar();
+  if (tabelasParaLimpar.length > 0) {
+    const nomes = tabelasParaLimpar.map(t => `${t.toUpperCase()} (${TABELAS[t]})`).join(', ');
+    const ok = confirm(`⚠ CONFIRMAR LIMPEZA\n\nVocê está prestes a APAGAR os dados de:\n${nomes}\n\nLoja: ${codigoLoja} — ${LOJAS[codigoLoja]}\nMês: ${mesRef}\n\nEssa ação não pode ser desfeita. Continuar?`);
+    if (!ok) { log('Importação cancelada pelo usuário.', 'warn'); return; }
+  }
+
+  const btn = document.getElementById('import-btn');
   btn.disabled = true;
   setProgress(0);
   document.getElementById('log').innerHTML = '';
   logCount = 0;
 
-  log(`Iniciando importação — Loja ${codigoLoja} | Mês ${mesRef}`, 'info');
-  log(`${arquivos.length} arquivo(s) para processar`, 'info');
+  log(`Iniciando — Loja ${codigoLoja} (${LOJAS[codigoLoja]}) | Mês ${mesRef}`, 'info');
 
+  // ── ETAPA 1: LIMPEZA ──
+  if (tabelasParaLimpar.length > 0) {
+    log(`── Limpando ${tabelasParaLimpar.length} tabela(s) antes de importar ──`, 'warn');
+    for (const tipo of tabelasParaLimpar) {
+      try {
+        await limparTabelaMes(TABELAS[tipo], codigoLoja, mesRef);
+        log(`✓ Dados anteriores removidos: ${tipo.toUpperCase()} (${TABELAS[tipo]}) | Loja ${codigoLoja} | ${mesRef}`, 'warn');
+      } catch(err) {
+        log(`✗ Erro ao limpar ${tipo.toUpperCase()}: ${err.message}`, 'err');
+        btn.disabled = false;
+        return;
+      }
+    }
+  }
+
+  // ── ETAPA 2: IMPORTAÇÃO ──
   let totalImportado = 0;
   let totalErros = 0;
   const total = arquivos.length;
@@ -714,69 +915,46 @@ async function importarTudo() {
     const statusEl = document.getElementById(`status-${tipo}`);
 
     try {
-      // Ler arquivo
       const buffer = await file.arrayBuffer();
       const wb = XLSX.read(buffer, { type: 'array' });
 
-      // Parsear
       let registros = [];
-      let tabela = '';
-      let onConflict = '';
-
-      if (tipo === 'rel1') {
-        registros  = parsearREL1(wb, codigoLoja, mesRef);
-        tabela     = 'vendas_produtos';
-        onConflict = 'chave';
-      } else if (tipo === 'rel4') {
-        registros  = parsearREL4(wb, codigoLoja, mesRef);
-        tabela     = 'resumo_movimento';
-        onConflict = 'chave';
-      } else if (tipo === 'dre') {
-        registros  = parsearDRE(wb, codigoLoja, mesRef);
-        tabela     = 'dre';
-        onConflict = 'chave';
-      } else if (tipo === 'rel90') {
-        registros  = parsearREL90(wb, codigoLoja, mesRef);
-        tabela     = 'itens_cupom';
-        onConflict = 'chave';
-      }
+      if (tipo === 'rel1')  registros = parsearREL1(wb, codigoLoja, mesRef);
+      if (tipo === 'rel4')  registros = parsearREL4(wb, codigoLoja, mesRef);
+      if (tipo === 'dre')   registros = parsearDRE(wb, codigoLoja, mesRef);
+      if (tipo === 'rel90') registros = parsearREL90(wb, codigoLoja, mesRef);
 
       log(`${tipo.toUpperCase()} → ${registros.length} registros parseados`, 'info');
 
       if (registros.length === 0) {
-        log(`⚠ Nenhum registro encontrado em ${tipo.toUpperCase()} — verifique o arquivo`, 'warn');
+        log(`⚠ Nenhum registro em ${tipo.toUpperCase()} — verifique o arquivo`, 'warn');
         statusEl.innerHTML = `<span style="color:var(--yellow)">⚠ 0 registros</span>`;
-        cardEl.classList.remove('has-file');
-        cardEl.classList.add('error');
-        totalErros++;
-        processados++;
-        setProgress((processados / total) * 100);
+        cardEl.classList.remove('has-file'); cardEl.classList.add('error');
+        totalErros++; processados++;
+        setProgress((processados/total)*100);
         continue;
       }
 
-      // Enviar ao Supabase
-      const enviados = await upsert(tabela, registros, onConflict);
-      log(`✓ ${tipo.toUpperCase()} — ${enviados} registros salvos em "${tabela}"`, 'ok');
+      const enviados = await upsert(TABELAS[tipo], registros, 'chave');
+      log(`✓ ${tipo.toUpperCase()} — ${enviados} registros salvos em "${TABELAS[tipo]}"`, 'ok');
       statusEl.innerHTML = `<span style="color:var(--green)">✓ ${enviados} registros</span>`;
-      cardEl.classList.remove('has-file', 'error');
-      cardEl.classList.add('success');
+      cardEl.classList.remove('has-file','error','warning'); cardEl.classList.add('success');
       totalImportado += enviados;
 
-    } catch (err) {
+    } catch(err) {
       log(`✗ Erro em ${tipo.toUpperCase()}: ${err.message}`, 'err');
       statusEl.innerHTML = `<span style="color:var(--red)">✗ Erro</span>`;
-      document.getElementById(`card-${tipo}`).classList.remove('has-file');
-      document.getElementById(`card-${tipo}`).classList.add('error');
+      cardEl.classList.remove('has-file'); cardEl.classList.add('error');
       totalErros++;
     }
 
     processados++;
-    setProgress((processados / total) * 100);
+    setProgress((processados/total)*100);
   }
 
   log('─────────────────────────────', 'info');
   if (totalErros === 0) {
-    log(`✓ Importação concluída! ${totalImportado} registros salvos no Supabase.`, 'ok');
+    log(`✓ Concluído! ${totalImportado} registros salvos — Loja ${codigoLoja} (${LOJAS[codigoLoja]}) | ${mesRef}`, 'ok');
   } else {
     log(`⚠ Finalizado com ${totalErros} erro(s). ${totalImportado} registros salvos.`, 'warn');
   }
@@ -791,13 +969,14 @@ document.querySelectorAll('.file-drop').forEach(zone => {
   zone.addEventListener('drop', e => {
     e.preventDefault();
     zone.classList.remove('dragover');
-    const tipo = zone.id.replace('drop-', '');
+    const tipo = zone.id.replace('drop-','');
     const file = e.dataTransfer.files[0];
     if (file) {
       files[tipo] = file;
       document.getElementById(`fname-${tipo}`).textContent = '📄 ' + file.name;
       document.getElementById(`card-${tipo}`).classList.add('has-file');
       log(`Arquivo selecionado [${tipo.toUpperCase()}]: ${file.name}`, 'info');
+      if (tipo === 'rel90') verificarMesREL90(file);
     }
   });
 });
