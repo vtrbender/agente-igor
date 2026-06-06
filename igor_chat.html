@@ -45,95 +45,153 @@
   header h1 { font-family: var(--mono); font-size: 1.4rem; color: var(--accent); letter-spacing: 0.05em; }
   header span { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); }
 
-  .config-bar {
-    display: flex;
-    gap: 1rem;
+  /* DROP ZONE PRINCIPAL */
+  .drop-zone {
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    padding: 2.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
     margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-    align-items: flex-end;
   }
 
-  .field { display: flex; flex-direction: column; gap: 0.4rem; }
+  .drop-zone:hover, .drop-zone.dragover {
+    border-color: var(--accent);
+    background: rgba(232,197,71,0.04);
+  }
 
-  .field label {
+  .drop-zone input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
+  .drop-zone-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+
+  .drop-zone-title {
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+  }
+
+  .drop-zone-sub {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  /* TABELA DE ARQUIVOS */
+  .files-header {
+    display: none;
     font-family: var(--mono);
     font-size: 0.7rem;
     color: var(--muted);
     text-transform: uppercase;
     letter-spacing: 0.08em;
+    margin-bottom: 0.6rem;
+    padding: 0 0.5rem;
   }
 
-  select, input[type="month"] {
+  .files-header.show { display: grid; grid-template-columns: 1fr 80px 160px 140px 36px; gap: 0.5rem; align-items: center; }
+
+  .file-list { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.5rem; }
+
+  .file-row {
+    display: grid;
+    grid-template-columns: 1fr 80px 160px 140px 36px;
+    gap: 0.5rem;
+    align-items: center;
     background: var(--surface);
     border: 1px solid var(--border);
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 0.85rem;
-    padding: 0.5rem 0.8rem;
-    border-radius: 4px;
-    outline: none;
-    cursor: pointer;
+    border-radius: 5px;
+    padding: 0.6rem 0.8rem;
     transition: border-color 0.2s;
   }
 
-  select:focus, input[type="month"]:focus { border-color: var(--accent); }
-  select.nao-confirmada { border-color: var(--yellow); box-shadow: 0 0 0 2px rgba(251,191,36,0.15); }
-  select.confirmada { border-color: var(--green); box-shadow: 0 0 0 2px rgba(74,222,128,0.1); }
+  .file-row.ok { border-color: var(--green); }
+  .file-row.erro { border-color: var(--red); }
+  .file-row.processando { border-color: var(--accent); }
 
-  .confirmar-loja-wrap { display: flex; flex-direction: column; justify-content: flex-end; }
-
-  #confirmar-loja-btn {
-    background: transparent;
-    border: 1px solid var(--yellow);
-    color: var(--yellow);
+  .file-row-name {
     font-family: var(--mono);
     font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: all 0.15s;
-    height: 38px;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  #confirmar-loja-btn:hover { background: rgba(251,191,36,0.1); }
-  #confirmar-loja-btn.confirmado { border-color: var(--green); color: var(--green); }
+  .file-row-tipo {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--accent);
+    font-weight: 600;
+    text-transform: uppercase;
+  }
 
-  .loja-badge { font-family: var(--mono); font-size: 0.7rem; margin-top: 0.3rem; min-height: 1.2em; color: var(--muted); }
-  .loja-badge.ok { color: var(--green); }
-  .loja-badge.warn { color: var(--yellow); }
+  .file-row select, .file-row input[type="month"] {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+    width: 100%;
+    transition: border-color 0.15s;
+  }
 
-  /* ── OPÇÃO LIMPAR ── */
+  .file-row select:focus, .file-row input[type="month"]:focus { border-color: var(--accent); }
+  .file-row select.erro-campo { border-color: var(--red); }
+
+  .file-row-remove {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+
+  .file-row-remove:hover { border-color: var(--red); color: var(--red); }
+
+  .file-row-status {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    grid-column: 1 / -1;
+    padding-top: 0.3rem;
+    display: none;
+  }
+
+  .file-row-status.show { display: block; }
+
+  /* OPÇÃO LIMPAR */
   .limpar-opcao {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 6px;
-    padding: 1rem 1.2rem;
+    padding: 0.9rem 1.2rem;
     margin-bottom: 1.5rem;
     display: flex;
-    align-items: flex-start;
-    gap: 1rem;
+    align-items: center;
+    gap: 0.8rem;
     flex-wrap: wrap;
   }
 
-  .limpar-opcao-left {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    flex: 1;
-    min-width: 260px;
-  }
-
   .toggle-wrap { position: relative; width: 38px; height: 22px; flex-shrink: 0; }
-
-  .toggle-wrap input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-    position: absolute;
-  }
+  .toggle-wrap input { opacity: 0; width: 0; height: 0; position: absolute; }
 
   .toggle-track {
     position: absolute;
@@ -148,174 +206,22 @@
   .toggle-track::after {
     content: '';
     position: absolute;
-    width: 14px;
-    height: 14px;
+    width: 14px; height: 14px;
     background: var(--muted);
     border-radius: 50%;
-    top: 3px;
-    left: 3px;
+    top: 3px; left: 3px;
     transition: all 0.2s;
   }
 
-  .toggle-wrap input:checked + .toggle-track {
-    background: rgba(249,113,113,0.15);
-    border-color: var(--red);
-  }
-
-  .toggle-wrap input:checked + .toggle-track::after {
-    background: var(--red);
-    transform: translateX(16px);
-  }
+  .toggle-wrap input:checked + .toggle-track { background: rgba(249,113,113,0.15); border-color: var(--red); }
+  .toggle-wrap input:checked + .toggle-track::after { background: var(--red); transform: translateX(16px); }
 
   .limpar-texto { flex: 1; }
+  .limpar-titulo { font-family: var(--mono); font-size: 0.78rem; color: var(--text); font-weight: 600; }
+  .limpar-desc { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); line-height: 1.5; margin-top: 0.2rem; }
 
-  .limpar-titulo {
-    font-family: var(--mono);
-    font-size: 0.78rem;
-    color: var(--text);
-    font-weight: 600;
-    margin-bottom: 0.2rem;
-  }
-
-  .limpar-desc {
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    color: var(--muted);
-    line-height: 1.5;
-  }
-
-  /* Seleção de quais tabelas limpar */
-  .limpar-tabelas {
-    display: none;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    padding-top: 0.8rem;
-    border-top: 1px solid var(--border);
-    margin-top: 0.8rem;
-    width: 100%;
-  }
-
-  .limpar-tabelas.show { display: flex; }
-
-  .limpar-tabelas-label {
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    color: var(--muted);
-    width: 100%;
-    margin-bottom: 0.3rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-
-  .check-item {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 0.35rem 0.7rem;
-    cursor: pointer;
-    transition: all 0.15s;
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    color: var(--muted);
-    user-select: none;
-  }
-
-  .check-item:hover { border-color: var(--red); color: var(--text); }
-
-  .check-item input[type="checkbox"] {
-    accent-color: var(--red);
-    width: 12px;
-    height: 12px;
-    cursor: pointer;
-    opacity: 1;
-    position: static;
-  }
-
-  .check-item.checked {
-    border-color: var(--red);
-    color: var(--red);
-    background: rgba(249,113,113,0.06);
-  }
-
-  .limpar-aviso {
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    color: var(--red);
-    width: 100%;
-    margin-top: 0.4rem;
-    display: none;
-  }
-
-  .limpar-aviso.show { display: block; }
-
-  /* ── GRID DE CARDS ── */
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
-
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 1.2rem;
-    transition: border-color 0.2s;
-  }
-
-  .card:hover { border-color: #3a3a3a; }
-  .card.has-file { border-color: var(--accent); }
-  .card.success { border-color: var(--green); }
-  .card.error { border-color: var(--red); }
-  .card.warning { border-color: var(--yellow); }
-
-  .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.8rem; }
-
-  .card-title {
-    font-family: var(--mono);
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .card-badge {
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    padding: 0.2rem 0.5rem;
-    border-radius: 3px;
-    background: var(--surface2);
-    color: var(--muted);
-  }
-
-  .card-desc { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.8rem; line-height: 1.5; }
-  .card-table { font-family: var(--mono); font-size: 0.65rem; color: #555; margin-bottom: 1rem; line-height: 1.8; }
-
-  .file-drop {
-    border: 1px dashed var(--border);
-    border-radius: 4px;
-    padding: 1rem;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
-  }
-
-  .file-drop:hover { border-color: var(--accent); background: rgba(232,197,71,0.03); }
-  .file-drop.dragover { border-color: var(--accent); background: rgba(232,197,71,0.06); }
-  .file-drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
-  .file-drop-text { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); pointer-events: none; }
-
-  .file-name { font-family: var(--mono); font-size: 0.72rem; color: var(--accent); margin-top: 0.5rem; word-break: break-all; }
-  .card-status { font-family: var(--mono); font-size: 0.7rem; margin-top: 0.6rem; min-height: 1.2em; }
-  .mes-alerta { font-family: var(--mono); font-size: 0.68rem; color: var(--yellow); margin-top: 0.4rem; display: none; line-height: 1.5; }
-
-  .actions { display: flex; gap: 1rem; margin-bottom: 2rem; align-items: center; flex-wrap: wrap; }
+  /* AÇÕES */
+  .actions { display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: center; flex-wrap: wrap; }
 
   button {
     font-family: var(--mono);
@@ -337,20 +243,16 @@
   #clear-btn { background: transparent; color: var(--muted); border: 1px solid var(--border); }
   #clear-btn:hover { border-color: var(--muted); color: var(--text); }
 
-  .aviso-banner {
-    display: none;
-    background: rgba(251,191,36,0.08);
-    border: 1px solid var(--yellow);
-    border-radius: 4px;
-    padding: 0.7rem 1rem;
+  .counter {
     font-family: var(--mono);
     font-size: 0.75rem;
-    color: var(--yellow);
-    margin-bottom: 1rem;
-    line-height: 1.6;
+    color: var(--muted);
+    margin-left: auto;
   }
 
-  .aviso-banner.show { display: block; }
+  /* LOG */
+  .progress-bar { height: 2px; background: var(--border); border-radius: 1px; margin-bottom: 1rem; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); transition: width 0.3s; width: 0%; }
 
   .log-container { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; }
 
@@ -373,8 +275,14 @@
   .log-info { color: var(--muted); }
   .log-ts { color: #444; margin-right: 0.5rem; }
 
-  .progress-bar { height: 2px; background: var(--border); border-radius: 1px; margin-bottom: 1rem; overflow: hidden; }
-  .progress-fill { height: 100%; background: var(--accent); transition: width 0.3s; width: 0%; }
+  .empty-state {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-align: center;
+    padding: 1rem;
+    display: none;
+  }
 </style>
 </head>
 <body>
@@ -384,132 +292,44 @@
   <span>Sistema de ingestão de dados TOTVS → Supabase</span>
 </header>
 
-<div class="config-bar">
-  <div class="field">
-    <label>Loja *</label>
-    <select id="loja" class="nao-confirmada" onchange="onLojaChange()">
-      <option value="">— selecione a loja —</option>
-      <option value="1">01 — Lima e Silva</option>
-      <option value="2">02 — Bom Fim</option>
-      <option value="3">03 — Canoas</option>
-    </select>
-    <div class="loja-badge warn" id="loja-badge">⚠ Confirme a loja antes de importar</div>
-  </div>
-  <div class="confirmar-loja-wrap">
-    <button id="confirmar-loja-btn" onclick="confirmarLoja()">Confirmar loja</button>
-  </div>
-  <div class="field">
-    <label>Mês de referência *</label>
-    <input type="month" id="mes" value="2026-04" onchange="onMesChange()">
-  </div>
+<!-- DROP ZONE -->
+<div class="drop-zone" id="drop-zone">
+  <input type="file" accept=".xlsx,.xls" multiple onchange="onFilesAdded(this.files)">
+  <div class="drop-zone-icon">📂</div>
+  <div class="drop-zone-title">Soltar arquivos aqui ou clicar para selecionar</div>
+  <div class="drop-zone-sub">Aceita múltiplos arquivos .xlsx — REL1, REL4, DRE, REL90 de qualquer loja e mês</div>
 </div>
 
-<!-- OPÇÃO LIMPAR ANTES DE IMPORTAR -->
+<!-- CABEÇALHO DA LISTA -->
+<div class="files-header" id="files-header">
+  <span>Arquivo</span>
+  <span>Tipo</span>
+  <span>Loja</span>
+  <span>Mês</span>
+  <span></span>
+</div>
+
+<!-- LISTA DE ARQUIVOS -->
+<div class="file-list" id="file-list"></div>
+<div class="empty-state" id="empty-state">Nenhum arquivo adicionado ainda.</div>
+
+<!-- OPÇÃO LIMPAR -->
 <div class="limpar-opcao">
-  <div class="limpar-opcao-left">
-    <label class="toggle-wrap">
-      <input type="checkbox" id="toggle-limpar" onchange="onToggleLimpar()">
-      <span class="toggle-track"></span>
-    </label>
-    <div class="limpar-texto">
-      <div class="limpar-titulo">Limpar dados anteriores antes de importar</div>
-      <div class="limpar-desc">Apaga os registros existentes da loja + mês selecionados antes de gravar os novos. Use ao reimportar um relatório corrigido onde linhas foram removidas.</div>
-    </div>
-  </div>
-  <div class="limpar-tabelas" id="limpar-tabelas">
-    <div class="limpar-tabelas-label">Quais tabelas limpar:</div>
-    <label class="check-item" id="ci-rel1" onclick="toggleCheck('rel1')">
-      <input type="checkbox" id="limpar-rel1"> REL1 — vendas_produtos
-    </label>
-    <label class="check-item" id="ci-rel4" onclick="toggleCheck('rel4')">
-      <input type="checkbox" id="limpar-rel4"> REL4 — resumo_movimento
-    </label>
-    <label class="check-item" id="ci-dre" onclick="toggleCheck('dre')">
-      <input type="checkbox" id="limpar-dre"> DRE — dre
-    </label>
-    <label class="check-item" id="ci-rel90" onclick="toggleCheck('rel90')">
-      <input type="checkbox" id="limpar-rel90"> REL90 — itens_cupom
-    </label>
-    <div class="limpar-aviso" id="limpar-aviso">
-      ⚠ Atenção: os dados apagados não podem ser recuperados. Os novos dados serão importados logo em seguida.
-    </div>
+  <label class="toggle-wrap">
+    <input type="checkbox" id="toggle-limpar">
+    <span class="toggle-track"></span>
+  </label>
+  <div class="limpar-texto">
+    <div class="limpar-titulo">Limpar dados anteriores antes de importar</div>
+    <div class="limpar-desc">Apaga os registros da loja + mês de cada arquivo antes de gravar os novos. Use ao reimportar relatórios corrigidos onde linhas foram removidas.</div>
   </div>
 </div>
 
-<div class="aviso-banner" id="aviso-banner"></div>
-
-<div class="grid">
-
-  <!-- REL1 -->
-  <div class="card" id="card-rel1">
-    <div class="card-header">
-      <div class="card-title">REL1</div>
-      <div class="card-badge">vendas_produtos</div>
-    </div>
-    <div class="card-desc">Vendas por produto com grupo, subgrupo, quantidade e valor.</div>
-    <div class="card-table">loja · grupo · subgrupo · codigo · produto · qtde · valor</div>
-    <div class="file-drop" id="drop-rel1">
-      <input type="file" accept=".xlsx,.xls" onchange="onFile('rel1', this)">
-      <div class="file-drop-text">↑ soltar ou clicar para selecionar</div>
-    </div>
-    <div class="file-name" id="fname-rel1"></div>
-    <div class="card-status" id="status-rel1"></div>
-  </div>
-
-  <!-- REL4 -->
-  <div class="card" id="card-rel4">
-    <div class="card-header">
-      <div class="card-title">REL4</div>
-      <div class="card-badge">resumo_movimento</div>
-    </div>
-    <div class="card-desc">Resumo de movimento por tipo: faturamento, grupos, descontos, setores.</div>
-    <div class="card-table">loja · mes · tipo · descricao · valor</div>
-    <div class="file-drop" id="drop-rel4">
-      <input type="file" accept=".xlsx,.xls" onchange="onFile('rel4', this)">
-      <div class="file-drop-text">↑ soltar ou clicar para selecionar</div>
-    </div>
-    <div class="file-name" id="fname-rel4"></div>
-    <div class="card-status" id="status-rel4"></div>
-  </div>
-
-  <!-- DRE -->
-  <div class="card" id="card-dre">
-    <div class="card-header">
-      <div class="card-title">DRE</div>
-      <div class="card-badge">dre</div>
-    </div>
-    <div class="card-desc">Demonstrativo de resultados com grupos de receita, despesas e CMV.</div>
-    <div class="card-table">loja · mes · grupo_dre · descricao · valor</div>
-    <div class="file-drop" id="drop-dre">
-      <input type="file" accept=".xlsx,.xls" onchange="onFile('dre', this)">
-      <div class="file-drop-text">↑ soltar ou clicar para selecionar</div>
-    </div>
-    <div class="file-name" id="fname-dre"></div>
-    <div class="card-status" id="status-dre"></div>
-  </div>
-
-  <!-- REL90 -->
-  <div class="card" id="card-rel90">
-    <div class="card-header">
-      <div class="card-title">REL90</div>
-      <div class="card-badge">itens_cupom</div>
-    </div>
-    <div class="card-desc">Pedidos vendidos com desconto — itens por cupom, motivo e valor líquido.</div>
-    <div class="card-table">loja · data · cupom · cod_produto · produto · qtde · valor_bruto · desconto · grupo · motivo · valor_liquido · subgrupo · tipo_pagamento</div>
-    <div class="file-drop" id="drop-rel90">
-      <input type="file" accept=".xlsx,.xls" onchange="onFile('rel90', this)">
-      <div class="file-drop-text">↑ soltar ou clicar para selecionar</div>
-    </div>
-    <div class="file-name" id="fname-rel90"></div>
-    <div class="mes-alerta" id="mes-alerta-rel90"></div>
-    <div class="card-status" id="status-rel90"></div>
-  </div>
-
-</div>
-
+<!-- AÇÕES -->
 <div class="actions">
   <button id="import-btn" onclick="importarTudo()">▶ Importar para Supabase</button>
-  <button id="clear-btn" onclick="limpar()">✕ Limpar</button>
+  <button id="clear-btn" onclick="limparTudo()">✕ Limpar tudo</button>
+  <span class="counter" id="counter"></span>
 </div>
 
 <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
@@ -525,158 +345,139 @@
 <script>
 const SUPABASE_URL = 'https://ejkuoefnavgvlobiokbq.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_zFAM6tL6msSUcSvHuXoVPA_j9Nne1Av';
+
 const LOJAS = { '1': 'Lima e Silva', '2': 'Bom Fim', '3': 'Canoas' };
 const TABELAS = { rel1: 'vendas_produtos', rel4: 'resumo_movimento', dre: 'dre', rel90: 'itens_cupom' };
 
-const files = { rel1: null, rel4: null, dre: null, rel90: null };
+let fileItems = []; // { id, file, tipo, loja, mes }
 let logCount = 0;
-let lojaConfirmada = false;
+let nextId = 0;
 
-// ═══════════════════════════════════════════════
-// TOGGLE LIMPAR
-// ═══════════════════════════════════════════════
-function onToggleLimpar() {
-  const ativo = document.getElementById('toggle-limpar').checked;
-  const tabelas = document.getElementById('limpar-tabelas');
-  const aviso = document.getElementById('limpar-aviso');
-  tabelas.classList.toggle('show', ativo);
-  aviso.classList.toggle('show', ativo);
+// ═══════════════════════════
+// DETECÇÃO AUTOMÁTICA
+// ═══════════════════════════
+function detectarTipo(nome) {
+  const n = nome.toLowerCase();
+  if (n.includes('rel90') || n.includes('rel_90') || n.includes('pedidos_vendidos') || n.includes('pedidos vendidos')) return 'rel90';
+  if (n.includes('rel1') || n.includes('rel_1') || n.includes('vendas_produto') || n.includes('vendas produto')) return 'rel1';
+  if (n.includes('rel4') || n.includes('rel_4') || n.includes('resumo') || n.includes('movimento')) return 'rel4';
+  if (n.includes('dre') || n.includes('demonstrativo')) return 'dre';
+  return '';
 }
 
-function toggleCheck(tipo) {
-  const cb = document.getElementById(`limpar-${tipo}`);
-  const ci = document.getElementById(`ci-${tipo}`);
-  // O click já vai inverter o checkbox nativamente — só sincroniza a classe visual
-  setTimeout(() => {
-    ci.classList.toggle('checked', cb.checked);
-  }, 0);
+function detectarLoja(nome) {
+  const n = nome.toLowerCase();
+  if (n.includes('lima') || n.includes('lima e silva') || n.includes('loja 1') || n.includes('loja1') || n.includes('01')) return '1';
+  if (n.includes('bom fim') || n.includes('bomfim') || n.includes('loja 2') || n.includes('loja2') || n.includes('02')) return '2';
+  if (n.includes('canoas') || n.includes('loja 3') || n.includes('loja3') || n.includes('03')) return '3';
+  return '';
 }
 
-function getTabelasParaLimpar() {
-  if (!document.getElementById('toggle-limpar').checked) return [];
-  return ['rel1','rel4','dre','rel90'].filter(t => document.getElementById(`limpar-${t}`).checked);
-}
+function detectarMes(nome) {
+  // Padrões: 01-2026, 01_2026, janeiro, jan, 2026-01
+  const n = nome.toLowerCase();
 
-// ═══════════════════════════════════════════════
-// LIMPAR NO SUPABASE
-// ═══════════════════════════════════════════════
-async function limparTabelaMes(tabela, codigoLoja, mesRef) {
-  const mesCompleto = mesRef + '-01';
-  const url = `${SUPABASE_URL}/rest/v1/${tabela}?codigo_loja=eq.${codigoLoja}&mes_referencia=eq.${mesCompleto}`;
-  const res = await fetch(url, {
-    method: 'DELETE',
-    headers: {
-      'apikey': SUPABASE_KEY,
-      'Authorization': `Bearer ${SUPABASE_KEY}`,
-      'Content-Type': 'application/json'
+  // Formato MM-AAAA ou MM_AAAA
+  let m = n.match(/(\d{2})[-_](\d{4})/);
+  if (m) return `${m[2]}-${m[1]}`;
+
+  // Formato AAAA-MM
+  m = n.match(/(\d{4})[-_](\d{2})/);
+  if (m) return `${m[1]}-${m[2]}`;
+
+  // Nomes de meses em português
+  const meses = ['janeiro','fevereiro','março','marco','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  for (let i = 0; i < meses.length; i++) {
+    if (n.includes(meses[i])) {
+      const anoMatch = n.match(/(\d{4})/);
+      const ano = anoMatch ? anoMatch[1] : new Date().getFullYear();
+      return `${ano}-${String(i+1).padStart(2,'0')}`;
     }
-  });
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Erro ao limpar ${tabela}: ${res.status} ${err.slice(0,200)}`);
   }
+
+  return '';
 }
 
-// ═══════════════════════════════════════════════
-// VALIDAÇÃO DE LOJA
-// ═══════════════════════════════════════════════
-function onLojaChange() {
-  lojaConfirmada = false;
-  const sel = document.getElementById('loja');
-  const btn = document.getElementById('confirmar-loja-btn');
-  const badge = document.getElementById('loja-badge');
-  sel.className = 'nao-confirmada';
-  btn.className = '';
-  btn.textContent = 'Confirmar loja';
-  badge.className = 'loja-badge warn';
-  badge.textContent = '⚠ Confirme a loja antes de importar';
-  atualizarAviso();
-}
+// ═══════════════════════════
+// ADICIONAR ARQUIVOS
+// ═══════════════════════════
+function onFilesAdded(fileList) {
+  for (const file of fileList) {
+    const id = nextId++;
+    const tipo = detectarTipo(file.name);
+    const loja = detectarLoja(file.name);
+    const mes  = detectarMes(file.name) || new Date().toISOString().slice(0,7);
 
-function confirmarLoja() {
-  const sel = document.getElementById('loja');
-  if (!sel.value) { mostrarAviso('⚠ Selecione uma loja antes de confirmar.'); return; }
-  lojaConfirmada = true;
-  sel.className = 'confirmada';
-  const btn = document.getElementById('confirmar-loja-btn');
-  btn.className = 'confirmado';
-  btn.textContent = '✓ Confirmada';
-  const badge = document.getElementById('loja-badge');
-  badge.className = 'loja-badge ok';
-  badge.textContent = `✓ Loja ${sel.value} — ${LOJAS[sel.value]}`;
-  atualizarAviso();
-}
-
-function onMesChange() {
-  if (files.rel90) verificarMesREL90(files.rel90);
-}
-
-// ═══════════════════════════════════════════════
-// VALIDAÇÃO DE MÊS DO REL90
-// ═══════════════════════════════════════════════
-async function verificarMesREL90(file) {
-  const mesRef = document.getElementById('mes').value;
-  const alertaEl = document.getElementById('mes-alerta-rel90');
-  try {
-    const buffer = await file.arrayBuffer();
-    const wb = XLSX.read(buffer, { type: 'array' });
-    const sheet = wb.Sheets[wb.SheetNames[0]];
-    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
-    const mesesEncontrados = new Set();
-    for (let i = 1; i < Math.min(rows.length, 50); i++) {
-      const col0 = String(rows[i][0] || '').trim();
-      if (!col0 || col0 === 'nan') continue;
-      let dataCaixa = col0;
-      const serial = parseInt(col0);
-      if (!isNaN(serial) && serial > 40000 && col0 === String(serial)) {
-        const d = new Date(Date.UTC(1899, 11, 30) + serial * 86400000);
-        dataCaixa = d.toISOString().split('T')[0];
-      } else if (col0.includes(' ')) {
-        dataCaixa = col0.split(' ')[0];
-      }
-      const match = dataCaixa.match(/^(\d{4}-\d{2})/);
-      if (match) mesesEncontrados.add(match[1]);
-      if (mesesEncontrados.size >= 3) break;
-    }
-    if (mesesEncontrados.size === 0) { alertaEl.style.display = 'none'; return; }
-    const mesesArr = Array.from(mesesEncontrados);
-    const todosBatem = mesesArr.every(m => m === mesRef);
-    if (!todosBatem) {
-      alertaEl.style.display = 'block';
-      alertaEl.textContent = `⚠ Arquivo contém dados de ${mesesArr.join(', ')} mas o mês selecionado é ${mesRef}. Verifique antes de importar.`;
-      document.getElementById('card-rel90').classList.add('warning');
-    } else {
-      alertaEl.style.display = 'none';
-      document.getElementById('card-rel90').classList.remove('warning');
-    }
-  } catch(e) { alertaEl.style.display = 'none'; }
-}
-
-// ═══════════════════════════════════════════════
-// BANNER
-// ═══════════════════════════════════════════════
-function mostrarAviso(msg) {
-  const el = document.getElementById('aviso-banner');
-  el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 4000);
-}
-
-function atualizarAviso() {
-  const el = document.getElementById('aviso-banner');
-  if (!lojaConfirmada) {
-    el.textContent = '⚠ Confirme a loja selecionada antes de importar. Isso garante que os dados vão para a loja correta no Supabase.';
-    el.classList.add('show');
-  } else {
-    el.classList.remove('show');
+    fileItems.push({ id, file, tipo, loja, mes });
+    renderRow({ id, file, tipo, loja, mes });
   }
+  atualizarHeader();
+  atualizarCounter();
 }
 
-atualizarAviso();
+function renderRow(item) {
+  const list = document.getElementById('file-list');
+  const row = document.createElement('div');
+  row.className = 'file-row';
+  row.id = `row-${item.id}`;
 
-// ═══════════════════════════════════════════════
+  const tipoLabel = item.tipo ? item.tipo.toUpperCase() : '—';
+  const tipoColor = item.tipo ? 'var(--accent)' : 'var(--muted)';
+
+  row.innerHTML = `
+    <div class="file-row-name" title="${item.file.name}">📄 ${item.file.name}</div>
+    <div class="file-row-tipo" style="color:${tipoColor}">${tipoLabel}</div>
+    <select onchange="updateItem(${item.id}, 'loja', this.value)" id="loja-${item.id}">
+      <option value="">— loja —</option>
+      <option value="1" ${item.loja==='1'?'selected':''}>01 Lima e Silva</option>
+      <option value="2" ${item.loja==='2'?'selected':''}>02 Bom Fim</option>
+      <option value="3" ${item.loja==='3'?'selected':''}>03 Canoas</option>
+    </select>
+    <input type="month" value="${item.mes}" onchange="updateItem(${item.id}, 'mes', this.value)" id="mes-${item.id}">
+    <button class="file-row-remove" onclick="removerItem(${item.id})">✕</button>
+    <div class="file-row-status" id="status-${item.id}"></div>
+  `;
+
+  list.appendChild(row);
+}
+
+function updateItem(id, campo, valor) {
+  const item = fileItems.find(f => f.id === id);
+  if (item) item[campo] = valor;
+}
+
+function removerItem(id) {
+  fileItems = fileItems.filter(f => f.id !== id);
+  const row = document.getElementById(`row-${id}`);
+  if (row) row.remove();
+  atualizarHeader();
+  atualizarCounter();
+}
+
+function limparTudo() {
+  fileItems = [];
+  document.getElementById('file-list').innerHTML = '';
+  document.getElementById('log').innerHTML = '';
+  logCount = 0;
+  document.getElementById('log-count').textContent = '0 eventos';
+  setProgress(0);
+  atualizarHeader();
+  atualizarCounter();
+}
+
+function atualizarHeader() {
+  const h = document.getElementById('files-header');
+  h.classList.toggle('show', fileItems.length > 0);
+}
+
+function atualizarCounter() {
+  const el = document.getElementById('counter');
+  el.textContent = fileItems.length > 0 ? `${fileItems.length} arquivo(s) na fila` : '';
+}
+
+// ═══════════════════════════
 // LOG
-// ═══════════════════════════════════════════════
+// ═══════════════════════════
 function log(msg, tipo = 'info') {
   const el = document.getElementById('log');
   const ts = new Date().toLocaleTimeString('pt-BR');
@@ -694,267 +495,202 @@ function setProgress(pct) {
   document.getElementById('progress').style.width = pct + '%';
 }
 
-// ═══════════════════════════════════════════════
-// ARQUIVO
-// ═══════════════════════════════════════════════
-function onFile(tipo, input) {
-  const file = input.files[0];
-  if (!file) return;
-  files[tipo] = file;
-  document.getElementById(`fname-${tipo}`).textContent = '📄 ' + file.name;
-  document.getElementById(`card-${tipo}`).classList.add('has-file');
-  document.getElementById(`status-${tipo}`).textContent = '';
-  log(`Arquivo selecionado [${tipo.toUpperCase()}]: ${file.name}`, 'info');
-  if (tipo === 'rel90') verificarMesREL90(file);
+function setRowStatus(id, msg, tipo) {
+  const el = document.getElementById(`status-${id}`);
+  if (!el) return;
+  el.className = `file-row-status show`;
+  el.style.color = tipo === 'ok' ? 'var(--green)' : tipo === 'err' ? 'var(--red)' : 'var(--yellow)';
+  el.textContent = msg;
+  const row = document.getElementById(`row-${id}`);
+  if (row) {
+    row.classList.remove('ok','erro','processando');
+    if (tipo === 'ok') row.classList.add('ok');
+    if (tipo === 'err') row.classList.add('erro');
+  }
 }
 
-function limpar() {
-  Object.keys(files).forEach(k => files[k] = null);
-  document.querySelectorAll('.file-name').forEach(el => el.textContent = '');
-  document.querySelectorAll('.card-status').forEach(el => el.textContent = '');
-  document.querySelectorAll('.mes-alerta').forEach(el => el.style.display = 'none');
-  document.querySelectorAll('.card').forEach(el => el.classList.remove('has-file','success','error','warning'));
-  document.getElementById('log').innerHTML = '';
-  logCount = 0;
-  document.getElementById('log-count').textContent = '0 eventos';
-  setProgress(0);
+// ═══════════════════════════
+// SUPABASE
+// ═══════════════════════════
+async function limparTabelaMes(tabela, codigoLoja, mesRef) {
+  const url = `${SUPABASE_URL}/rest/v1/${tabela}?codigo_loja=eq.${codigoLoja}&mes_referencia=eq.${mesRef}-01`;
+  const res = await fetch(url, {
+    method: 'DELETE',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' }
+  });
+  if (!res.ok) { const err = await res.text(); throw new Error(`${res.status}: ${err.slice(0,200)}`); }
 }
 
-// ═══════════════════════════════════════════════
-// SUPABASE UPSERT
-// ═══════════════════════════════════════════════
-async function upsert(tabela, registros, onConflict) {
-  const url = `${SUPABASE_URL}/rest/v1/${tabela}`;
+async function upsert(tabela, registros) {
+  const url = `${SUPABASE_URL}/rest/v1/${tabela}?on_conflict=chave`;
   const headers = {
     'apikey': SUPABASE_KEY,
     'Authorization': `Bearer ${SUPABASE_KEY}`,
     'Content-Type': 'application/json',
-    'Prefer': `resolution=merge-duplicates,return=minimal`
+    'Prefer': 'resolution=merge-duplicates,return=minimal'
   };
   const BATCH = 500;
   let total = 0;
   for (let i = 0; i < registros.length; i += BATCH) {
-    const batch = registros.slice(i, i + BATCH);
-    const params = onConflict ? `?on_conflict=${onConflict}` : '';
-    const res = await fetch(url + params, { method: 'POST', headers, body: JSON.stringify(batch) });
+    const res = await fetch(url, { method: 'POST', headers, body: JSON.stringify(registros.slice(i, i+BATCH)) });
     if (!res.ok) { const err = await res.text(); throw new Error(`${res.status}: ${err.slice(0,200)}`); }
-    total += batch.length;
+    total += Math.min(BATCH, registros.length - i);
   }
   return total;
 }
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════
 // PARSERS
-// ═══════════════════════════════════════════════
+// ═══════════════════════════
 function parsearREL1(wb, codigoLoja, mesRef) {
-  const sheet = wb.Sheets[wb.SheetNames[0]];
-  const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+  const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header:1, defval:'' });
   const mapa = {};
   for (let i = 2; i < rows.length; i++) {
-    const row = rows[i];
-    const cod  = String(row[3] ?? '').trim();
-    const nome = String(row[4] ?? '').trim();
-    if (!cod || cod === 'nan') continue;
-    if (!nome || nome === 'nan') continue;
-    const qtde  = parseFloat(String(row[5]||0).replace(/\./g,'').replace(',','.')) || 0;
-    const valor = parseFloat(String(row[7]||0).replace(/\./g,'').replace(',','.')) || 0;
+    const r = rows[i];
+    const cod = String(r[3]??'').trim(), nome = String(r[4]??'').trim();
+    if (!cod || cod==='nan' || !nome || nome==='nan') continue;
+    const qtde  = parseFloat(String(r[5]||0).replace(/\./g,'').replace(',','.')) || 0;
+    const valor = parseFloat(String(r[7]||0).replace(/\./g,'').replace(',','.')) || 0;
     const key = `${codigoLoja}_${mesRef}_${cod}`;
-    if (mapa[key]) { mapa[key].quantidade += qtde; mapa[key].valor += valor; }
-    else mapa[key] = {
-      codigo_loja: parseInt(codigoLoja), mes_referencia: mesRef+'-01',
-      loja: String(row[0]??'').trim(), grupo: String(row[1]??'').trim(),
-      subgrupo: String(row[2]??'').trim(), codigo_produto: cod, nome_produto: nome,
-      quantidade: qtde, unidade: String(row[6]??'').trim(), valor, chave: key
-    };
+    if (mapa[key]) { mapa[key].quantidade+=qtde; mapa[key].valor+=valor; }
+    else mapa[key] = { codigo_loja:parseInt(codigoLoja), mes_referencia:mesRef+'-01', loja:String(r[0]??'').trim(), grupo:String(r[1]??'').trim(), subgrupo:String(r[2]??'').trim(), codigo_produto:cod, nome_produto:nome, quantidade:qtde, unidade:String(r[6]??'').trim(), valor, chave:key };
   }
-  return Object.values(mapa).filter(r => r.nome_produto && r.nome_produto !== 'nan');
+  return Object.values(mapa).filter(r => r.nome_produto && r.nome_produto!=='nan');
 }
 
 function parsearREL4(wb, codigoLoja, mesRef) {
-  const sheet = wb.Sheets[wb.SheetNames[0]];
-  const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
-  const dados = [];
-  let tipoAtual = '';
-  for (let i = 0; i < rows.length; i++) {
-    const row = rows[i];
-    const col0 = String(row[0]||'').trim();
-    const col1 = String(row[1]||'').trim();
-    const col5 = String(row[5]||'').trim();
-    if (col0.startsWith('Tipo:')) { tipoAtual = col0.replace('Tipo:','').trim(); continue; }
-    if (!tipoAtual || !col1 || col1 === 'nan') continue;
-    if (col1.startsWith('R$')) continue;
-    const valor = parseFloat(col5.replace('R$','').replace('.','').replace(',','.').trim());
+  const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header:1, defval:'' });
+  const dados = []; let tipo = '';
+  for (const r of rows) {
+    const c0=String(r[0]||'').trim(), c1=String(r[1]||'').trim(), c5=String(r[5]||'').trim();
+    if (c0.startsWith('Tipo:')) { tipo=c0.replace('Tipo:','').trim(); continue; }
+    if (!tipo||!c1||c1==='nan'||c1.startsWith('R$')) continue;
+    const valor=parseFloat(c5.replace('R$','').replace('.','').replace(',','.').trim());
     if (isNaN(valor)) continue;
-    dados.push({ codigo_loja: parseInt(codigoLoja), mes_referencia: mesRef+'-01', tipo: tipoAtual, descricao: col1, valor, chave: `${codigoLoja}_${mesRef}_${tipoAtual}_${col1}` });
+    dados.push({ codigo_loja:parseInt(codigoLoja), mes_referencia:mesRef+'-01', tipo, descricao:c1, valor, chave:`${codigoLoja}_${mesRef}_${tipo}_${c1}` });
   }
   return dados;
 }
 
 function parsearDRE(wb, codigoLoja, mesRef) {
-  const sheet = wb.Sheets[wb.SheetNames[0]];
-  const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
-  const dados = [];
-  let grupoAtual = '', grupoNome = '';
-  for (let i = 0; i < rows.length; i++) {
-    const row = rows[i];
-    const col0 = String(row[0]||'').trim();
-    const col2 = String(row[2]||'').trim();
-    const col3 = String(row[3]||'').trim();
-    if (col0.startsWith('Grupo DRE:')) {
-      const match = col0.match(/Grupo DRE:\s*(\d+)\s*-\s*(.+)/);
-      if (match) { grupoAtual = match[1].trim(); grupoNome = match[2].trim(); }
-      continue;
-    }
-    if (!grupoAtual || !col2 || col2 === 'nan' || col2 === 'Descrição' || col2 === 'Valor') continue;
-    if (col2.startsWith('R$') || col3.startsWith('R$') || col3.startsWith('-R$')) continue;
-    const valor = parseFloat(col3.replace(',','.'));
+  const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header:1, defval:'' });
+  const dados = []; let gCod='', gNome='';
+  for (const r of rows) {
+    const c0=String(r[0]||'').trim(), c2=String(r[2]||'').trim(), c3=String(r[3]||'').trim();
+    if (c0.startsWith('Grupo DRE:')) { const m=c0.match(/Grupo DRE:\s*(\d+)\s*-\s*(.+)/); if(m){gCod=m[1].trim();gNome=m[2].trim();} continue; }
+    if (!gCod||!c2||c2==='nan'||c2==='Descrição'||c2==='Valor'||c2.startsWith('R$')||c3.startsWith('R$')||c3.startsWith('-R$')) continue;
+    const valor=parseFloat(c3.replace(',','.'));
     if (isNaN(valor)) continue;
-    dados.push({ codigo_loja: parseInt(codigoLoja), mes_referencia: mesRef+'-01', grupo_dre: grupoNome, descricao: col2, valor, chave: `${codigoLoja}_${mesRef}_${grupoAtual}_${col2}` });
+    dados.push({ codigo_loja:parseInt(codigoLoja), mes_referencia:mesRef+'-01', grupo_dre:gNome, descricao:c2, valor, chave:`${codigoLoja}_${mesRef}_${gCod}_${c2}` });
   }
   return dados;
 }
 
 function parsearREL90(wb, codigoLoja, mesRef) {
-  const sheet = wb.Sheets[wb.SheetNames[0]];
-  const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+  const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header:1, defval:'' });
   const dados = [];
   for (let i = 1; i < rows.length; i++) {
-    const row = rows[i];
-    const col0 = String(row[0]||'').trim();
-    if (!col0 || col0 === 'nan') continue;
-    const cupom = String(row[1]||'').trim();
-    const nomeProduto = String(row[3]||'').trim();
-    if (!nomeProduto || nomeProduto === 'nan' || !cupom || cupom === 'nan') continue;
-    let dataCaixa = col0;
-    const serial = parseInt(col0);
-    if (!isNaN(serial) && serial > 40000 && col0 === String(serial)) {
-      const d = new Date(Date.UTC(1899,11,30) + serial*86400000);
-      dataCaixa = d.toISOString().split('T')[0];
-    } else if (col0.includes(' ')) { dataCaixa = col0.split(' ')[0]; }
-    dados.push({
-      codigo_loja: parseInt(codigoLoja), mes_referencia: mesRef+'-01',
-      data_caixa: dataCaixa, numero_cupom: parseInt(cupom)||0,
-      codigo_produto: parseInt(String(row[2]||''))||0, nome_produto: nomeProduto,
-      quantidade: parseFloat(String(row[4]||0).replace(',','.'))||0,
-      valor_bruto: parseFloat(String(row[5]||0).replace(',','.'))||0,
-      desconto: parseFloat(String(row[7]||0).replace(',','.'))||0,
-      grupo: String(row[8]||'').trim(), motivo: String(row[9]||'').trim()||null,
-      valor_liquido: parseFloat(String(row[10]||0).replace(',','.'))||0,
-      subgrupo: String(row[11]||'').trim(), tipo_pagamento: String(row[12]||'').trim()||null,
-      chave: `${codigoLoja}_${dataCaixa}_${cupom}_${String(row[2]||'').trim()}`
-    });
+    const r=rows[i], c0=String(r[0]||'').trim();
+    if (!c0||c0==='nan') continue;
+    const cupom=String(r[1]||'').trim(), nome=String(r[3]||'').trim();
+    if (!nome||nome==='nan'||!cupom||cupom==='nan') continue;
+    let data=c0;
+    const serial=parseInt(c0);
+    if (!isNaN(serial)&&serial>40000&&c0===String(serial)) { const d=new Date(Date.UTC(1899,11,30)+serial*86400000); data=d.toISOString().split('T')[0]; }
+    else if (c0.includes(' ')) data=c0.split(' ')[0];
+    dados.push({ codigo_loja:parseInt(codigoLoja), mes_referencia:mesRef+'-01', data_caixa:data, numero_cupom:parseInt(cupom)||0, codigo_produto:parseInt(String(r[2]||''))||0, nome_produto:nome, quantidade:parseFloat(String(r[4]||0).replace(',','.'))||0, valor_bruto:parseFloat(String(r[5]||0).replace(',','.'))||0, desconto:parseFloat(String(r[7]||0).replace(',','.'))||0, grupo:String(r[8]||'').trim(), motivo:String(r[9]||'').trim()||null, valor_liquido:parseFloat(String(r[10]||0).replace(',','.'))||0, subgrupo:String(r[11]||'').trim(), tipo_pagamento:String(r[12]||'').trim()||null, chave:`${codigoLoja}_${data}_${cupom}_${String(r[2]||'').trim()}` });
   }
   return dados;
 }
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════
 // IMPORTAÇÃO PRINCIPAL
-// ═══════════════════════════════════════════════
+// ═══════════════════════════
 async function importarTudo() {
-  if (!lojaConfirmada) {
-    mostrarAviso('⚠ Confirme a loja selecionada antes de importar!');
-    document.getElementById('loja').focus();
-    return;
+  if (fileItems.length === 0) { log('Nenhum arquivo na fila.', 'warn'); return; }
+
+  // Validação
+  let valido = true;
+  for (const item of fileItems) {
+    if (!item.loja) {
+      document.getElementById(`loja-${item.id}`).classList.add('erro-campo');
+      valido = false;
+    } else {
+      document.getElementById(`loja-${item.id}`).classList.remove('erro-campo');
+    }
+    if (!item.tipo) {
+      log(`⚠ Tipo não identificado: ${item.file.name} — renomeie o arquivo incluindo REL1, REL4, DRE ou REL90 no nome.`, 'warn');
+      valido = false;
+    }
   }
+  if (!valido) { log('⚠ Corrija os campos marcados em vermelho antes de importar.', 'warn'); return; }
 
-  const codigoLoja = document.getElementById('loja').value;
-  const mesRef     = document.getElementById('mes').value;
+  const limpar = document.getElementById('toggle-limpar').checked;
 
-  if (!codigoLoja) { mostrarAviso('⚠ Selecione uma loja antes de importar.'); return; }
-
-  const arquivos = Object.entries(files).filter(([k,v]) => v !== null);
-  if (arquivos.length === 0) { log('Nenhum arquivo selecionado.', 'warn'); return; }
-
-  // Aviso mês divergente REL90
-  const alertaRel90 = document.getElementById('mes-alerta-rel90');
-  if (files.rel90 && alertaRel90.style.display === 'block') {
-    const ok = confirm(`⚠ ATENÇÃO\n\nO arquivo REL90 parece conter dados de um mês diferente de ${mesRef}.\n\nDeseja importar mesmo assim?`);
-    if (!ok) return;
-  }
-
-  // Confirma limpeza se ativada
-  const tabelasParaLimpar = getTabelasParaLimpar();
-  if (tabelasParaLimpar.length > 0) {
-    const nomes = tabelasParaLimpar.map(t => `${t.toUpperCase()} (${TABELAS[t]})`).join(', ');
-    const ok = confirm(`⚠ CONFIRMAR LIMPEZA\n\nVocê está prestes a APAGAR os dados de:\n${nomes}\n\nLoja: ${codigoLoja} — ${LOJAS[codigoLoja]}\nMês: ${mesRef}\n\nEssa ação não pode ser desfeita. Continuar?`);
-    if (!ok) { log('Importação cancelada pelo usuário.', 'warn'); return; }
+  if (limpar) {
+    const ok = confirm(`⚠ CONFIRMAR LIMPEZA\n\nVocê ativou a opção de limpar dados anteriores.\n\nPara cada arquivo na fila, os dados existentes da mesma loja + mês serão APAGADOS antes de gravar os novos.\n\nEssa ação não pode ser desfeita. Continuar?`);
+    if (!ok) { log('Importação cancelada.', 'warn'); return; }
   }
 
   const btn = document.getElementById('import-btn');
   btn.disabled = true;
-  setProgress(0);
   document.getElementById('log').innerHTML = '';
   logCount = 0;
+  setProgress(0);
 
-  log(`Iniciando — Loja ${codigoLoja} (${LOJAS[codigoLoja]}) | Mês ${mesRef}`, 'info');
+  log(`Iniciando importação de ${fileItems.length} arquivo(s)${limpar ? ' com limpeza prévia' : ''}`, 'info');
 
-  // ── ETAPA 1: LIMPEZA ──
-  if (tabelasParaLimpar.length > 0) {
-    log(`── Limpando ${tabelasParaLimpar.length} tabela(s) antes de importar ──`, 'warn');
-    for (const tipo of tabelasParaLimpar) {
-      try {
-        await limparTabelaMes(TABELAS[tipo], codigoLoja, mesRef);
-        log(`✓ Dados anteriores removidos: ${tipo.toUpperCase()} (${TABELAS[tipo]}) | Loja ${codigoLoja} | ${mesRef}`, 'warn');
-      } catch(err) {
-        log(`✗ Erro ao limpar ${tipo.toUpperCase()}: ${err.message}`, 'err');
-        btn.disabled = false;
-        return;
-      }
-    }
-  }
+  let totalImportado = 0, totalErros = 0;
 
-  // ── ETAPA 2: IMPORTAÇÃO ──
-  let totalImportado = 0;
-  let totalErros = 0;
-  const total = arquivos.length;
-  let processados = 0;
+  for (let i = 0; i < fileItems.length; i++) {
+    const item = fileItems[i];
+    const tabela = TABELAS[item.tipo];
+    const nomeLoja = LOJAS[item.loja];
+    const row = document.getElementById(`row-${item.id}`);
+    if (row) row.classList.add('processando');
 
-  for (const [tipo, file] of arquivos) {
-    log(`─── Processando ${tipo.toUpperCase()} ───`, 'info');
-    const cardEl   = document.getElementById(`card-${tipo}`);
-    const statusEl = document.getElementById(`status-${tipo}`);
+    log(`─── ${item.file.name} | ${item.tipo.toUpperCase()} | Loja ${item.loja} (${nomeLoja}) | ${item.mes} ───`, 'info');
 
     try {
-      const buffer = await file.arrayBuffer();
-      const wb = XLSX.read(buffer, { type: 'array' });
-
-      let registros = [];
-      if (tipo === 'rel1')  registros = parsearREL1(wb, codigoLoja, mesRef);
-      if (tipo === 'rel4')  registros = parsearREL4(wb, codigoLoja, mesRef);
-      if (tipo === 'dre')   registros = parsearDRE(wb, codigoLoja, mesRef);
-      if (tipo === 'rel90') registros = parsearREL90(wb, codigoLoja, mesRef);
-
-      log(`${tipo.toUpperCase()} → ${registros.length} registros parseados`, 'info');
-
-      if (registros.length === 0) {
-        log(`⚠ Nenhum registro em ${tipo.toUpperCase()} — verifique o arquivo`, 'warn');
-        statusEl.innerHTML = `<span style="color:var(--yellow)">⚠ 0 registros</span>`;
-        cardEl.classList.remove('has-file'); cardEl.classList.add('error');
-        totalErros++; processados++;
-        setProgress((processados/total)*100);
-        continue;
+      // Limpeza prévia
+      if (limpar) {
+        await limparTabelaMes(tabela, item.loja, item.mes);
+        log(`✓ Dados anteriores removidos: ${tabela} | Loja ${item.loja} | ${item.mes}`, 'warn');
       }
 
-      const enviados = await upsert(TABELAS[tipo], registros, 'chave');
-      log(`✓ ${tipo.toUpperCase()} — ${enviados} registros salvos em "${TABELAS[tipo]}"`, 'ok');
-      statusEl.innerHTML = `<span style="color:var(--green)">✓ ${enviados} registros</span>`;
-      cardEl.classList.remove('has-file','error','warning'); cardEl.classList.add('success');
-      totalImportado += enviados;
+      // Parse
+      const buffer = await item.file.arrayBuffer();
+      const wb = XLSX.read(buffer, { type: 'array' });
+      let registros = [];
+      if (item.tipo==='rel1')  registros = parsearREL1(wb, item.loja, item.mes);
+      if (item.tipo==='rel4')  registros = parsearREL4(wb, item.loja, item.mes);
+      if (item.tipo==='dre')   registros = parsearDRE(wb, item.loja, item.mes);
+      if (item.tipo==='rel90') registros = parsearREL90(wb, item.loja, item.mes);
+
+      if (registros.length === 0) {
+        log(`⚠ Nenhum registro encontrado — verifique o arquivo`, 'warn');
+        setRowStatus(item.id, '⚠ 0 registros — verifique o arquivo', 'warn');
+        totalErros++;
+      } else {
+        const enviados = await upsert(tabela, registros);
+        log(`✓ ${enviados} registros salvos em "${tabela}"`, 'ok');
+        setRowStatus(item.id, `✓ ${enviados} registros salvos`, 'ok');
+        totalImportado += enviados;
+      }
 
     } catch(err) {
-      log(`✗ Erro em ${tipo.toUpperCase()}: ${err.message}`, 'err');
-      statusEl.innerHTML = `<span style="color:var(--red)">✗ Erro</span>`;
-      cardEl.classList.remove('has-file'); cardEl.classList.add('error');
+      log(`✗ Erro: ${err.message}`, 'err');
+      setRowStatus(item.id, `✗ Erro: ${err.message.slice(0,80)}`, 'err');
       totalErros++;
     }
 
-    processados++;
-    setProgress((processados/total)*100);
+    if (row) row.classList.remove('processando');
+    setProgress(((i+1) / fileItems.length) * 100);
   }
 
   log('─────────────────────────────', 'info');
   if (totalErros === 0) {
-    log(`✓ Concluído! ${totalImportado} registros salvos — Loja ${codigoLoja} (${LOJAS[codigoLoja]}) | ${mesRef}`, 'ok');
+    log(`✓ Tudo concluído! ${totalImportado} registros salvos no Supabase.`, 'ok');
   } else {
     log(`⚠ Finalizado com ${totalErros} erro(s). ${totalImportado} registros salvos.`, 'warn');
   }
@@ -962,23 +698,14 @@ async function importarTudo() {
   btn.disabled = false;
 }
 
-// Drag & drop
-document.querySelectorAll('.file-drop').forEach(zone => {
-  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
-  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
-  zone.addEventListener('drop', e => {
-    e.preventDefault();
-    zone.classList.remove('dragover');
-    const tipo = zone.id.replace('drop-','');
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      files[tipo] = file;
-      document.getElementById(`fname-${tipo}`).textContent = '📄 ' + file.name;
-      document.getElementById(`card-${tipo}`).classList.add('has-file');
-      log(`Arquivo selecionado [${tipo.toUpperCase()}]: ${file.name}`, 'info');
-      if (tipo === 'rel90') verificarMesREL90(file);
-    }
-  });
+// Drag & drop na drop zone
+const dz = document.getElementById('drop-zone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+dz.addEventListener('drop', e => {
+  e.preventDefault();
+  dz.classList.remove('dragover');
+  onFilesAdded(e.dataTransfer.files);
 });
 </script>
 </body>
